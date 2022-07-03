@@ -2,6 +2,7 @@ package cy.jdkdigital.hungryhungrychests.common.entity;
 
 import cy.jdkdigital.hungryhungrychests.core.init.ModEntities;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.AgeableMob;
@@ -10,6 +11,7 @@ import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.*;
+import net.minecraft.world.entity.ai.navigation.PathNavigation;
 import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -25,8 +27,8 @@ import org.jetbrains.annotations.Nullable;
 public class HungryChest extends ContainerAnimal
 {
     private LazyOptional<IItemHandlerModifiable> inventoryHandler = LazyOptional.of(() -> new ItemStackHandler(27));
-
-    private final ChestLidController chestLidController = new ChestLidController();
+    private float openAmount0;
+    private float openAmount;
 
     public HungryChest(EntityType<? extends Animal> type, Level level) {
         super(type, level);
@@ -51,7 +53,21 @@ public class HungryChest extends ContainerAnimal
     @Override
     public void tick() {
         super.tick();
-        this.chestLidController.tickLid();
+
+        updateLid();
+    }
+
+    private void updateLid() {
+        this.openAmount0 = this.openAmount;
+        if (this.getDeltaMovement().horizontalDistance() > 0.01F) {
+            this.openAmount = Math.min(1.0F, this.openAmount + 0.15F);
+        } else {
+            this.openAmount = Math.max(0.0F, this.openAmount - 0.19F);
+        }
+    }
+
+    public float getLidAmount(float partialTicks) {
+        return Mth.lerp(partialTicks, this.openAmount0, this.openAmount);
     }
 
     @Override
@@ -63,10 +79,6 @@ public class HungryChest extends ContainerAnimal
     @Override
     public AgeableMob getBreedOffspring(ServerLevel level, AgeableMob parent) {
         return ModEntities.HUNGRY_CHEST.get().create(level);
-    }
-
-    public float getOpenNess(float partialTicks) {
-        return this.chestLidController.getOpenness(partialTicks);
     }
 
     @Override

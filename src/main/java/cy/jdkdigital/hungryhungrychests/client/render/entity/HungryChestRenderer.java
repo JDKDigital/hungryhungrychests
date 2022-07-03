@@ -21,13 +21,6 @@ public class HungryChestRenderer extends MobRenderer<HungryChest, HungryChestMod
     }
 
     @Override
-    public void render(HungryChest entity, float entityYaw, float partialTicks, PoseStack poseStack, MultiBufferSource buffer, int packedLight) {
-        super.render(entity, entityYaw, partialTicks, poseStack, buffer, packedLight);
-
-        this.model.lid.xRot = entity.getOpenNess(partialTicks) * (float)Math.PI / 2F - (float)Math.PI;
-    }
-
-    @Override
     public @NotNull ResourceLocation getTextureLocation(HungryChest entity) {
         return NORMAL;
     }
