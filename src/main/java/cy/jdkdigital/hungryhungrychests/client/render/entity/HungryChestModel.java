@@ -1,7 +1,6 @@
 package cy.jdkdigital.hungryhungrychests.client.render.entity;
 
 import com.google.common.collect.ImmutableList;
-import cy.jdkdigital.hungryhungrychests.HungryHungryChests;
 import cy.jdkdigital.hungryhungrychests.common.entity.HungryChest;
 import net.minecraft.client.model.AgeableListModel;
 import net.minecraft.client.model.geom.ModelPart;
@@ -11,7 +10,6 @@ import net.minecraft.client.model.geom.builders.LayerDefinition;
 import net.minecraft.client.model.geom.builders.MeshDefinition;
 import net.minecraft.client.model.geom.builders.PartDefinition;
 import net.minecraft.util.Mth;
-import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 
 public class HungryChestModel<E extends HungryChest> extends AgeableListModel<E>
@@ -24,7 +22,8 @@ public class HungryChestModel<E extends HungryChest> extends AgeableListModel<E>
     public final ModelPart lock;
 
     private final float CLOSED = (float)Math.PI;
-    private final float OPEN = -0.5F * (float)Math.PI * 0.2F + (float)Math.PI;
+    private final float SLIGHT_OPEN = -0.5F * (float)Math.PI * 0.2F + (float)Math.PI;
+    private final float VERY_OPEN = -0.5F * (float)Math.PI * 1.0F + (float)Math.PI;
 
     public HungryChestModel(ModelPart model) {
         super(true, 24.0F, 0.0F, 3.0F, 2.0F, 24.0F);
@@ -52,7 +51,7 @@ public class HungryChestModel<E extends HungryChest> extends AgeableListModel<E>
     public void prepareMobModel(E entity, float limbSwing, float limbSwingAmount, float partialTick) {
         super.prepareMobModel(entity, limbSwing, limbSwingAmount, partialTick);
 
-        this.lid.xRot = Mth.lerp(entity.getLidAmount(partialTick), CLOSED, OPEN);
+        this.lid.xRot = Mth.lerp(entity.getLidAmount(partialTick), CLOSED, entity.isOpen() ? VERY_OPEN : SLIGHT_OPEN);
     }
 
     protected @NotNull Iterable<ModelPart> headParts() {

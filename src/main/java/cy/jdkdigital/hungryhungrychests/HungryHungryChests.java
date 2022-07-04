@@ -2,6 +2,7 @@ package cy.jdkdigital.hungryhungrychests;
 
 import com.mojang.logging.LogUtils;
 import cy.jdkdigital.hungryhungrychests.core.init.ModEntities;
+import cy.jdkdigital.hungryhungrychests.core.init.ModItems;
 import cy.jdkdigital.hungryhungrychests.core.setup.Events;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
@@ -28,11 +29,9 @@ public class HungryHungryChests
     public static final String MODID = "hungryhungrychests";
 
     public HungryHungryChests() {
-        // Register ourselves for server and other game events we are interested in
-        MinecraftForge.EVENT_BUS.register(this);
-
         IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
         ModEntities.ENTITIES.register(modEventBus);
+        ModItems.ITEMS.register(modEventBus);
         modEventBus.addListener(Events::onEntityAttributeCreate);
     }
 }
